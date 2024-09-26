@@ -7,13 +7,15 @@
  * @date: September 22, 2024
  */
 
+import com.sun.jdi.connect.Connector;
+
 import java.io.*;
 import java.util.Scanner;
 
 public class Parser {
 
     //Create a BST tree of Integer type
-    private BST<Integer> mybst = new BST<>();
+    private BST<Catcher> mybst = new BST<>();
 
     public Parser(String filename) throws IOException {
         process(new File(filename));
@@ -53,23 +55,29 @@ public class Parser {
     // Determine the incoming command and operate on the BST
     public void operate_BST(String[] command) throws IOException {
         String tempString;
-        Node<Integer> tempNode;
-        int obj;
+        String skillString;
+        int counter = 0;
+        Node<Catcher> tempNode;
+        Catcher obj;
 
         for(int i = 0; i < command.length; i++) {
-            // inserts number into bst
+            // inserts object into bst
             if(command[i].contains("insert")) {
-                tempString = command[i].substring(6);  // reads number
-                obj = Integer.parseInt(tempString);              // converts to int
+                tempString = command[i].substring(6);  // reads object
+
+                // converts to Catcher
+                obj = new Catcher(Integer.parseInt(tempString));
+
 
                 mybst.insert(obj);
 
-                writeToFile(("insert " + obj), "result.txt");
+                writeToFile(("insert " + obj.getString()), "result.txt");
 
-                // searches for number in bst
+                // searches for object in bst
             } else if(command[i].contains("search")) {
                 tempString = command[i].substring(6);  // reads number
-                obj = Integer.parseInt(tempString);              // converts to int
+                // converts to Catcher
+                obj = new Catcher(Integer.parseInt(tempString));
 
                 tempNode = mybst.search(obj);
 
@@ -77,13 +85,14 @@ public class Parser {
                 if(tempNode == null) {
                     writeToFile("search failed", "result.txt");
                 } else {
-                    writeToFile(("found " + obj), "result.txt");
+                    writeToFile(("found " + obj.getString()), "result.txt");
                 }
 
-                // removes number from bst
+                // removes object from bst
             } else if(command[i].contains("remove")) {
                 tempString = command[i].substring(6);  // reads number
-                obj = Integer.parseInt(tempString);              // converts to int
+                // converts to Catcher
+                obj = new Catcher(Integer.parseInt(tempString));
 
                 tempNode = mybst.remove(obj);
 
@@ -91,12 +100,32 @@ public class Parser {
                 if(tempNode == null) {
                     writeToFile("remove failed", "result.txt");
                 } else {
-                    writeToFile(("removed "+ obj), "result.txt");
+                    writeToFile(("removed "+ obj.getString()), "result.txt");
                 }
 
                 // prints bst
             } else if(command[i].contains("print")) {
-                writeToFile(mybst.printBST(), "result.txt");
+                tempString = mybst.printBST();
+
+                // loop that separates each skill rating, determines the appropriate user, and prints the users in order
+                while(tempString.contains(" ")) {
+                    counter++;
+
+                    // separates one skill rating
+                    skillString = tempString.substring(0, tempString.indexOf(" "));
+
+                    // separates the rest
+                    tempString = tempString.substring(tempString.indexOf(" ") + 1);
+
+                    // searches for specific skill rating
+                    obj = new Catcher("null", 0, Integer.parseInt(skillString), "null");
+
+                    // prints all related data
+                    tempNode = mybst.search(obj);
+                    writeToFile("  " + counter + ": " + tempNode.getElement().getString(), "result.txt");
+                }
+
+                counter = 0;
 
                 // terminates searching through bst
             } else if(command[i].contains("fin")){

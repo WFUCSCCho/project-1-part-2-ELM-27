@@ -56,7 +56,7 @@ class Node<T> implements Comparable<T> {
     public int compareTo(Object o) {
         int difference;
 
-        difference = (int) obj - (int) o;
+        difference = Integer.parseInt(obj.toString()) - Integer.parseInt(o.toString());
 
         return difference;
     }

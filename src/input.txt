@@ -1,25 +1,25 @@
 
-insert 111
-             insert 23
+insert 12433794
+             insert 11324794
 
-insert 99
-insert         4
+insert 6926006
+insert     3885626
 
 isEmpty
 
-    insert     111
+    insert     12433794
 
 print
 
 
 search 9
 
-remove 23
+remove 6926006
 
-remove 4
+remove 11324794
 remove 999999
 isEmptyasfh
 print
 
-insert 123
+insert 24944054
 print
